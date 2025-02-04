@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COA Verification</title>
+    <title>William C. Mellor Estate COA Verification</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -14,6 +14,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            flex-direction: column;
         }
 
         .container {
@@ -21,7 +22,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 90%;
-            max-width: 600px;
+            max-width: 800px;
             padding: 30px;
             text-align: center;
         }
@@ -30,6 +31,27 @@
             color: #333;
             font-size: 24px;
             margin-bottom: 20px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .nav-buttons a {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .nav-buttons a:hover {
+            background-color: #0056b3;
         }
 
         .upload-section {
@@ -98,19 +120,45 @@
 <body>
 
 <div class="container">
-    <h1>Welcome to the William C Mellor Estate Certificate of Authenticity Verification</h1>
+    <h1>William C. Mellor Estate COA Verification</h1>
 
-    <div class="upload-section">
-        <label for="coa-file">Upload COA PDF</label>
-        <input type="file" id="coa-file" accept="application/pdf" onchange="handleFile()">
+    <div class="nav-buttons">
+        <a href="#lineage" onclick="displaySection('lineage')">Lineage & Pedigree</a>
+        <a href="#items" onclick="displaySection('items')">Certified Items</a>
+        <a href="#records" onclick="displaySection('records')">Historic Records</a>
     </div>
 
-    <div id="hash-result" class="hash-result" style="display: none;">
-        <p><strong>SHA-256 Hash:</strong> <span id="computed-hash"></span></p>
+    <div id="coa-verification">
+        <div class="upload-section">
+            <label for="coa-file">Upload COA PDF</label>
+            <input type="file" id="coa-file" accept="application/pdf" onchange="handleFile()">
+        </div>
+
+        <div id="hash-result" class="hash-result" style="display: none;">
+            <p><strong>SHA-256 Hash:</strong> <span id="computed-hash"></span></p>
+        </div>
+
+        <div id="result-message" class="result-message" style="display: none;">
+            <!-- Result message will appear here -->
+        </div>
     </div>
 
-    <div id="result-message" class="result-message" style="display: none;">
-        <!-- Result message will appear here -->
+    <div id="lineage" class="section" style="display: none;">
+        <h2>Lineage & Pedigree</h2>
+        <p>Explore the family history, kinship, and the detailed pedigree of William C. Mellor's descendants. Discover his ancestral roots and the legacy of the Mellor family.</p>
+        <!-- Add your lineage details here -->
+    </div>
+
+    <div id="items" class="section" style="display: none;">
+        <h2>Certified Estate Items</h2>
+        <p>This section showcases the certified items from the William C. Mellor estate, including photographs, awards, memorabilia, and more. Each item is accompanied by a certificate of authenticity.</p>
+        <!-- Add your certified items here -->
+    </div>
+
+    <div id="records" class="section" style="display: none;">
+        <h2>Historic Records</h2>
+        <p>Access historic records from the estate of William C. Mellor. These documents highlight the key moments in his career and life, as well as the significant events in Hollywood during his time.</p>
+        <!-- Add your historic records here -->
     </div>
 
     <div class="footer">
@@ -161,6 +209,13 @@
             const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
             return hashHex;
         });
+    }
+
+    function displaySection(section) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(s => s.style.display = 'none');
+
+        document.getElementById(section).style.display = 'block';
     }
 </script>
 
