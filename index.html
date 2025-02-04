@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COA Verification</title>
+    <script>
+        async function verifyFile() {
+            const fileInput = document.getElementById('fileInput');
+            const resultDiv = document.getElementById('result');
+            
+            if (fileInput.files.length === 0) {
+                resultDiv.innerText = "Please upload a COA PDF.";
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const arrayBuffer = await file.arrayBuffer();
+            const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            
+            const officialHash = "YOUR_OFFICIAL_HASH_HERE"; // Replace with actual stored hash
+            
+            if (hashHex === officialHash) {
+                resultDiv.innerText = "✅ COA is authentic!";
+                resultDiv.style.color = "green";
+            } else {
+                resultDiv.innerText = "❌ COA verification failed!";
+                resultDiv.style.color = "red";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>COA Verification</h2>
+    <p>Upload your COA PDF to verify its authenticity.</p>
+    <input type="file" id="fileInput" accept="application/pdf">
+    <button onclick="verifyFile()">Verify COA</button>
+    <p id="result"></p>
+</body>
+</html>
