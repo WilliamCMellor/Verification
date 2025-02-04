@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COA Verification</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         async function verifyFile() {
             const fileInput = document.getElementById('fileInput');
@@ -30,13 +31,23 @@
                 resultDiv.style.color = "red";
             }
         }
+        
+        function generateQRCode() {
+            const qrDiv = document.getElementById('qrcode');
+            qrDiv.innerHTML = "";
+            const url = window.location.href;
+            new QRCode(qrDiv, url);
+        }
     </script>
 </head>
-<body>
+<body onload="generateQRCode()">
     <h2>COA Verification</h2>
     <p>Upload your COA PDF to verify its authenticity.</p>
     <input type="file" id="fileInput" accept="application/pdf">
     <button onclick="verifyFile()">Verify COA</button>
     <p id="result"></p>
+    
+    <h3>Scan QR Code to Access</h3>
+    <div id="qrcode"></div>
 </body>
 </html>
