@@ -4,50 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COA Verification</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script>
-        async function verifyFile() {
-            const fileInput = document.getElementById('fileInput');
-            const resultDiv = document.getElementById('result');
-            
-            if (fileInput.files.length === 0) {
-                resultDiv.innerText = "Please upload a COA PDF.";
-                return;
-            }
-            
-            const file = fileInput.files[0];
-            const arrayBuffer = await file.arrayBuffer();
-            const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            
-            const officialHash = "YOUR_OFFICIAL_HASH_HERE"; // Replace with actual stored hash
-            
-            if (hashHex === officialHash) {
-                resultDiv.innerText = "✅ COA is authentic!";
-                resultDiv.style.color = "green";
-            } else {
-                resultDiv.innerText = "❌ COA verification failed!";
-                resultDiv.style.color = "red";
-            }
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        
-        function generateQRCode() {
-            const qrDiv = document.getElementById('qrcode');
-            qrDiv.innerHTML = "";
-            const url = window.location.href;
-            new QRCode(qrDiv, url);
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            text-align: center;
         }
-    </script>
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .upload-section {
+            margin-bottom: 20px;
+        }
+
+        .upload-section input[type="file"] {
+            display: none;
+        }
+
+        .upload-section label {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .upload-section label:hover {
+            background-color: #0056b3;
+        }
+
+        .hash-result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            color: #333;
+        }
+
+        .result-message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
 </head>
-<body onload="generateQRCode()">
-    <h2>COA Verification</h2>
-    <p>Upload your COA PDF to verify its authenticity.</p>
-    <input type="file" id="fileInput" accept="application/pdf">
-    <button onclick="verifyFile()">Verify COA</button>
-    <p id="result"></p>
-    
-    <h3>Scan QR Code to Access</h3>
-    <div id="qrcode"></div>
+<body>
+
+<div class="container">
+    <h1>COA Document Verification</h1>
+
+    <div class="upload-section">
+        <label for="coa-file">Upload COA PDF</label>
+        <input type="file" id="coa-file" accept="application/pdf" onchange="handleFile()">
+    </div>
+
+    <div id="hash-result" class="hash-result" style="display: none;">
+        <p><strong>SHA-256 Hash:</strong> <span id="computed-hash"></span></p>
+    </div>
+
+    <div id="result-message" class="result-message" style="display: none;">
+        <!-- Result message will appear here -->
+    </div>
+
+    <div class="footer">
+        <p>Verify your COA against the official hash. If it matches, the document is authentic.</p>
+        <p>For more details, visit <a href="https://your-website.com">Your Website</a>.</p>
+    </div>
+</div>
+
+<script>
+    const officialHash = "YOUR_OFFICIAL_HASH_HERE"; // Replace with your COA document's official SHA-256 hash
+
+    function handleFile() {
+        const fileInput = document.getElementById("coa-file");
+        const file = fileInput.files[0];
+
+        if (file && file.type === "application/pdf") {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const arrayBuffer = e.target.result;
+                const hash = sha256(arrayBuffer);
+                document.getElementById("computed-hash").textContent = hash;
+                document.getElementById("hash-result").style.display = "block";
+
+                const resultMessage = document.getElementById("result-message");
+
+                if (hash === officialHash) {
+                    resultMessage.textContent = "Success! The document is authentic.";
+                    resultMessage.classList.add("success");
+                    resultMessage.classList.remove("error");
+                } else {
+                    resultMessage.textContent = "Error: The document has been altered.";
+                    resultMessage.classList.add("error");
+                    resultMessage.classList.remove("success");
+                }
+
+                resultMessage.style.display = "block";
+            };
+            reader.readAsArrayBuffer(file);
+        } else {
+            alert("Please upload a valid PDF file.");
+        }
+    }
+
+    // SHA-256 hashing function
+    function sha256(arrayBuffer) {
+        return crypto.subtle.digest('SHA-256', arrayBuffer).then(buffer => {
+            const hashArray = Array.from(new Uint8Array(buffer));
+            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        });
+    }
+</script>
+
 </body>
 </html>
