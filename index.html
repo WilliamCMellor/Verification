@@ -3,220 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>William C. Mellor Heritage & Provenance Verification</title>
+    <title>Mellor Collection COA Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f7f9fc;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
+            font-family: 'Playfair Display', serif;
+            background-color: #0D0D0D;
+            color: #F5F5F5;
+            text-align: center;
+            padding: 50px;
         }
-
-        .container {
-            background-color: #fff;
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5em;
+            color: #E6B800;
+            text-transform: uppercase;
+        }
+        select, button, input {
+            margin: 10px;
+            padding: 10px;
+            font-size: 1em;
+            border: 2px solid #E6B800;
+            background: black;
+            color: white;
+        }
+        select:hover, button:hover, input:hover {
+            background: #E6B800;
+            color: black;
+        }
+        #qrcode {
+            margin-top: 20px;
+        }
+        #result {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        #details {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin-top: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 800px;
-            padding: 30px;
-            text-align: center;
         }
-
-        h1 {
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .nav-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .nav-buttons a {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 16px;
-            text-align: center;
-        }
-
-        .nav-buttons a:hover {
-            background-color: #0056b3;
-        }
-
-        .upload-section {
-            margin-bottom: 20px;
-        }
-
-        .upload-section input[type="file"] {
-            display: none;
-        }
-
-        .upload-section label {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            text-align: center;
-        }
-
-        .upload-section label:hover {
-            background-color: #0056b3;
-        }
-
-        .hash-result {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
-            color: #333;
-        }
-
-        .result-message {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .error {
-            color: #dc3545;
-        }
-
-        .success {
-            color: #28a745;
-        }
-
-        .footer {
-            margin-top: 30px;
-            font-size: 14px;
-            color: #888;
-        }
-
-        .footer a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        const collections = {
+            "collection1": {
+                hash: "HASH_FOR_COLLECTION1",
+                name: "Mellor Collection - Mini 1",
+                owners: "John Doe, Jane Smith",
+                report: "<a href='https://your-site.com/report1.pdf' target='_blank'>Mellor Heritage & Provenance Report</a>"
+            },
+            "collection2": {
+                hash: "HASH_FOR_COLLECTION2",
+                name: "Mellor Collection - Mini 2",
+                owners: "Alice Brown, Robert Johnson",
+                report: "<a href='https://your-site.com/report2.pdf' target='_blank'>Mellor Heritage & Provenance Report</a>"
+            }
+        };
+        
+        async function verifyFile() {
+            const fileInput = document.getElementById('fileInput');
+            const resultDiv = document.getElementById('result');
+            const detailsDiv = document.getElementById('details');
+            
+            if (fileInput.files.length === 0) {
+                resultDiv.innerText = "Please upload a COA PDF.";
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const arrayBuffer = await file.arrayBuffer();
+            const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            
+            let verifiedCollection = null;
+            for (const key in collections) {
+                if (collections[key].hash === hashHex) {
+                    verifiedCollection = collections[key];
+                    break;
+                }
+            }
+            
+            if (verifiedCollection) {
+                resultDiv.innerText = "✅ COA is authentic!";
+                resultDiv.style.color = "#E6B800";
+                detailsDiv.innerHTML = `<h3>${verifiedCollection.name}</h3>
+                                       <p><strong>Previous Owners:</strong> ${verifiedCollection.owners}</p>
+                                       <p><strong>Provenance Report:</strong> ${verifiedCollection.report}</p>`;
+            } else {
+                resultDiv.innerText = "❌ COA verification failed!";
+                resultDiv.style.color = "red";
+                detailsDiv.innerHTML = "";
+            }
+        }
+        
+        function generateQRCode(collectionId) {
+            const qrDiv = document.getElementById('qrcode');
+            qrDiv.innerHTML = "";
+            const url = window.location.href + `?collection=${collectionId}`;
+            new QRCode(qrDiv, url);
+        }
+    </script>
 </head>
 <body>
-
-<div class="container">
-    <h1>William C. Mellor Heritage & Provenance Verification</h1>
-
-    <div class="nav-buttons">
-        <a href="#items" onclick="displaySection('items')">Certified Items</a>
-        <a href="#records" onclick="displaySection('records')">Historic Records</a>
-    </div>
-
-    <div id="coa-verification">
-        <div class="upload-section">
-            <label for="coa-file">Upload COA PDF</label>
-            <input type="file" id="coa-file" accept="application/pdf" onchange="handleFile()">
-        </div>
-
-        <div id="hash-result" class="hash-result" style="display: none;">
-            <p><strong>SHA-256 Hash:</strong> <span id="computed-hash"></span></p>
-        </div>
-
-        <div id="result-message" class="result-message" style="display: none;">
-            <!-- Result message will appear here -->
-        </div>
-    </div>
-
-    <div id="lineage" class="section" style="display: none;">
-        <h2>Lineage & Pedigree</h2>
-        <p>Explore the family history, kinship, and the detailed pedigree of William C. Mellor's descendants. Discover his ancestral roots and the legacy of the Mellor family.</p>
-        <!-- Add your lineage details here -->
-    </div>
-
-    <div id="items" class="section" style="display: none;">
-        <h2>Certified Estate Items</h2>
-        <p>This section showcases the certified items from the William C. Mellor estate, including photographs, awards, memorabilia, and more. Each item is accompanied by a certificate of authenticity.</p>
-        <!-- Add your certified items here -->
-    </div>
-
-    <div id="records" class="section" style="display: none;">
-        <h2>Historic Records</h2>
-        <p>Access historic records from the estate of William C. Mellor. These documents highlight the key moments in his career and life, as well as the significant events in Hollywood during his time.</p>
-        <!-- Add your historic records here -->
-    </div>
-
-    <div class="footer">
-        <p>Verify your COA against the official hash. If it matches, the document is authentic.</p>
-        <p>For more details, visit <a href="https://your-website.com">Your Website</a>.</p>
-    </div>
-</div>
-
-<script>
-    const officialHash = "YOUR_OFFICIAL_HASH_HERE"; // Replace with your COA document's official SHA-256 hash
-
-    function handleFile() {
-        const fileInput = document.getElementById("coa-file");
-        const file = fileInput.files[0];
-
-        if (file && file.type === "application/pdf") {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const arrayBuffer = e.target.result;
-                const hash = sha256(arrayBuffer);
-                document.getElementById("computed-hash").textContent = hash;
-                document.getElementById("hash-result").style.display = "block";
-
-                const resultMessage = document.getElementById("result-message");
-
-                if (hash === officialHash) {
-                    resultMessage.textContent = "Success! The document is authentic.";
-                    resultMessage.classList.add("success");
-                    resultMessage.classList.remove("error");
-                } else {
-                    resultMessage.textContent = "Error: The document has been altered.";
-                    resultMessage.classList.add("error");
-                    resultMessage.classList.remove("success");
-                }
-
-                resultMessage.style.display = "block";
-            };
-            reader.readAsArrayBuffer(file);
-        } else {
-            alert("Please upload a valid PDF file.");
-        }
-    }
-
-    // SHA-256 hashing function
-    function sha256(arrayBuffer) {
-        return crypto.subtle.digest('SHA-256', arrayBuffer).then(buffer => {
-            const hashArray = Array.from(new Uint8Array(buffer));
-            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
-            return hashHex;
-        });
-    }
-
-    function displaySection(section) {
-        const sections = document.querySelectorAll('.section');
-        sections.forEach(s => s.style.display = 'none');
-
-        document.getElementById(section).style.display = 'block';
-    }
-</script>
-
+    <h2>Mellor Collection COA Verification</h2>
+    <p>Select a mini-collection to generate a QR code:</p>
+    <select onchange="generateQRCode(this.value)">
+        <option value="">-- Select Collection --</option>
+        <option value="collection1">Mellor Collection - Mini 1</option>
+        <option value="collection2">Mellor Collection - Mini 2</option>
+    </select>
+    <div id="qrcode"></div>
+    
+    <h3>Upload COA to Verify</h3>
+    <input type="file" id="fileInput" accept="application/pdf">
+    <button onclick="verifyFile()">Verify COA</button>
+    <p id="result"></p>
+    <div id="details"></div>
 </body>
 </html>
