@@ -8,119 +8,73 @@
     <style>
         body {
             font-family: 'Playfair Display', serif;
-            background-color: #0D0D0D;
-            color: #F5F5F5;
+            background-color: #F4F1EA;
+            color: #2C2C2C;
             text-align: center;
             padding: 50px;
         }
         h2 {
             font-family: 'Cinzel', serif;
             font-size: 2.5em;
-            color: #E6B800;
+            color: #6D4C41;
             text-transform: uppercase;
         }
-        select, button, input {
+        input, button {
             margin: 10px;
             padding: 10px;
             font-size: 1em;
-            border: 2px solid #E6B800;
-            background: black;
+            border: 2px solid #6D4C41;
+            background: white;
+            color: #6D4C41;
+        }
+        input:hover, button:hover {
+            background: #6D4C41;
             color: white;
-        }
-        select:hover, button:hover, input:hover {
-            background: #E6B800;
-            color: black;
-        }
-        #qrcode {
-            margin-top: 20px;
         }
         #result {
             font-size: 1.5em;
             margin-top: 20px;
         }
         #details {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.05);
             padding: 20px;
             margin-top: 20px;
             border-radius: 10px;
         }
+        img {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        const collections = {
-            "collection1": {
-                hash: "HASH_FOR_COLLECTION1",
-                name: "Mellor Collection - Mini 1",
-                owners: "John Doe, Jane Smith",
-                report: "<a href='https://your-site.com/report1.pdf' target='_blank'>Mellor Heritage & Provenance Report</a>"
-            },
-            "collection2": {
-                hash: "HASH_FOR_COLLECTION2",
-                name: "Mellor Collection - Mini 2",
-                owners: "Alice Brown, Robert Johnson",
-                report: "<a href='https://your-site.com/report2.pdf' target='_blank'>Mellor Heritage & Provenance Report</a>"
-            }
-        };
-        
-        async function verifyFile() {
-            const fileInput = document.getElementById('fileInput');
-            const resultDiv = document.getElementById('result');
-            const detailsDiv = document.getElementById('details');
-            
-            if (fileInput.files.length === 0) {
-                resultDiv.innerText = "Please upload a COA PDF.";
-                return;
-            }
-            
-            const file = fileInput.files[0];
-            const arrayBuffer = await file.arrayBuffer();
-            const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            
-            let verifiedCollection = null;
-            for (const key in collections) {
-                if (collections[key].hash === hashHex) {
-                    verifiedCollection = collections[key];
-                    break;
-                }
-            }
-            
-            if (verifiedCollection) {
-                resultDiv.innerText = "✅ COA is authentic!";
-                resultDiv.style.color = "#E6B800";
-                detailsDiv.innerHTML = `<h3>${verifiedCollection.name}</h3>
-                                       <p><strong>Previous Owners:</strong> ${verifiedCollection.owners}</p>
-                                       <p><strong>Provenance Report:</strong> ${verifiedCollection.report}</p>`;
-            } else {
-                resultDiv.innerText = "❌ COA verification failed!";
-                resultDiv.style.color = "red";
-                detailsDiv.innerHTML = "";
-            }
-        }
-        
-        function generateQRCode(collectionId) {
+        function generateQRCode() {
             const qrDiv = document.getElementById('qrcode');
             qrDiv.innerHTML = "";
-            const url = window.location.href + `?collection=${collectionId}`;
+            const url = window.location.href;
             new QRCode(qrDiv, url);
+        }
+        function verifyCertificate() {
+            const inputCode = document.getElementById('certificateCode').value;
+            const validCodes = ["ABC1234567", "XYZ9876543"]; // Replace with actual codes
+            const resultDiv = document.getElementById('result');
+            if (validCodes.includes(inputCode)) {
+                window.location.href = "verification.html?code=" + inputCode;
+            } else {
+                resultDiv.innerText = "❌ Invalid Certificate Number";
+                resultDiv.style.color = "red";
+            }
         }
     </script>
 </head>
 <body>
-    <h2>Mellor Collection COA Verification</h2>
-    <p>Select a mini-collection to generate a QR code:</p>
-    <select onchange="generateQRCode(this.value)">
-        <option value="">-- Select Collection --</option>
-        <option value="collection1">Mellor Collection - Mini 1</option>
-        <option value="collection2">Mellor Collection - Mini 2</option>
-    </select>
-    <div id="qrcode"></div>
-    
-    <h3>Upload COA to Verify</h3>
-    <input type="file" id="fileInput" accept="application/pdf">
-    <button onclick="verifyFile()">Verify COA</button>
+    <img src="Main Prov Logo.png" alt="Mellor Heritage & Provenance Verification">
+    <h2>Verify Your Certificate</h2>
+    <p>Enter your 10-digit certificate number below:</p>
+    <input type="text" id="certificateCode" placeholder="Enter Code">
+    <button onclick="verifyCertificate()">Verify</button>
     <p id="result"></p>
-    <div id="details"></div>
+    <div id="qrcode"></div>
+    <script>generateQRCode();</script>
 </body>
 </html>
