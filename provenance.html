@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provenance - William C. Mellor Archive</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: url('home2.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .provenance-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #555;
+        }
+
+        .home-link {
+            display: block;
+            margin-top: 20px;
+            color: #333;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="provenance-container">
+        <h1>Provenance Documentation</h1>
+        <p>Access the complete provenance and heritage report for the William C. Mellor Archive below.</p>
+        
+        <a href="Unofficial Provenance and Heritage Report.pdf" class="button" target="_blank">
+            View Provenance Report
+        </a>
+
+        <a href="index.html" class="home-link">Return to Home</a>
+    </div>
+
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('isAuthenticated')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
