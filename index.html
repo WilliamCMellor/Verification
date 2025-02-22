@@ -3,54 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enter PIN - The William C. Mellor Archive</title>
+    <title>William C. Mellor Archive</title>
     <style>
         body {
-            background-image: url('PinScreen1.jpg');
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: url('PinScreen1.jpg') no-repeat center center fixed;
             background-size: cover;
-            background-position: center;
-            text-align: center;
             font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        .container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        input[type="password"] {
-            font-size: 20px;
-            padding: 10px;
-            width: 250px;
+
+        .pin-container {
             text-align: center;
+            padding: 20px;
         }
-        button {
-            font-size: 20px;
-            padding: 10px 20px;
+
+        .pin-input {
+            width: 200px;
+            padding: 10px;
+            margin: 10px;
+            border: 2px solid #333;
+            border-radius: 4px;
+        }
+
+        .error-message {
+            color: red;
+            display: none;
             margin-top: 10px;
-            cursor: pointer;
+        }
+
+        .menu-container {
+            text-align: center;
+            display: none;
+        }
+
+        .menu-link {
+            display: block;
+            padding: 15px;
+            margin: 10px;
+            color: #333;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .menu-link:hover {
+            color: #666;
         }
     </style>
-    <script>
-        function checkPIN() {
-            var enteredPIN = document.getElementById("pin").value;
-            var correctPIN = "1234"; // Placeholder, should be securely handled on a backend
-            if (enteredPIN === correctPIN) {
-                window.location.href = 'landing.html';
-            } else {
-                alert("Incorrect PIN. Please try again.");
-            }
-        }
-    </script>
 </head>
 <body>
-    <div class="container">
-        <h2>Welcome to</h2>
-        <h1>The William C. Mellor Archive</h1>
-        <p>Please enter your PIN to access the archive</p>
-        <input type="password" id="pin" placeholder="Enter PIN">
-        <br>
-        <button onclick="checkPIN()">Submit</button>
+    <div class="pin-container">
+        <input type="password" id="pinInput" class="pin-input" placeholder="Enter PIN">
+        <div id="errorMessage" class="error-message">Invalid PIN</div>
     </div>
+
+    <div id="menuContainer" class="menu-container">
+        <a href="provenance.html" class="menu-link">Provenance</a>
+        <a href="collection-notes.html" class="menu-link">Collection Notes</a>
+        <a href="ownership-records.html" class="menu-link">Ownership Records</a>
+    </div>
+
+    <script>
+        const INITIAL_PIN = 'WCM062903';
+        let currentPin = INITIAL_PIN;
+
+        document.getElementById('pinInput').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                validatePin();
+            }
+        });
+
+        function validatePin() {
+            const pinInput = document.getElementById('pinInput');
+            const errorMessage = document.getElementById('errorMessage');
+            const menuContainer = document.getElementById('menuContainer');
+
+            if (pinInput.value === currentPin) {
+                pinInput.style.display = 'none';
+                errorMessage.style.display = 'none';
+                menuContainer.style.display = 'block';
+                localStorage.setItem('isAuthenticated', 'true');
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Check if already authenticated
+        if (localStorage.getItem('isAuthenticated') === 'true') {
+            document.querySelector('.pin-container').style.display = 'none';
+            document.getElementById('menuContainer').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
