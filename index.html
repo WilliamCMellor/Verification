@@ -3,78 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mellor Collection COA Verification</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <title>Enter PIN - The William C. Mellor Archive</title>
     <style>
         body {
-            font-family: 'Playfair Display', serif;
-            background-color: #F4F1EA;
-            color: #2C2C2C;
+            background-image: url('PinScreen1.jpg');
+            background-size: cover;
+            background-position: center;
             text-align: center;
-            padding: 50px;
+            font-family: Arial, sans-serif;
         }
-        h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 2.5em;
-            color: #6D4C41;
-            text-transform: uppercase;
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
-        input, button {
-            margin: 10px;
+        input[type="password"] {
+            font-size: 20px;
             padding: 10px;
-            font-size: 1em;
-            border: 2px solid #6D4C41;
-            background: white;
-            color: #6D4C41;
+            width: 250px;
+            text-align: center;
         }
-        input:hover, button:hover {
-            background: #6D4C41;
-            color: white;
-        }
-        #result {
-            font-size: 1.5em;
-            margin-top: 20px;
-        }
-        #details {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 10px;
-        }
-        img {
-            max-width: 300px;
-            margin-bottom: 20px;
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        function generateQRCode() {
-            const qrDiv = document.getElementById('qrcode');
-            qrDiv.innerHTML = "";
-            const url = window.location.href;
-            new QRCode(qrDiv, url);
-        }
-        function verifyCertificate() {
-            const inputCode = document.getElementById('certificateCode').value;
-            const validCodes = ["ABC1234567", "XYZ9876543"]; // Replace with actual codes
-            const resultDiv = document.getElementById('result');
-            if (validCodes.includes(inputCode)) {
-                window.location.href = "verification.html?code=" + inputCode;
+        function checkPIN() {
+            var enteredPIN = document.getElementById("pin").value;
+            var correctPIN = "1234"; // Placeholder, should be securely handled on a backend
+            if (enteredPIN === correctPIN) {
+                window.location.href = 'landing.html';
             } else {
-                resultDiv.innerText = "❌ Invalid Certificate Number";
-                resultDiv.style.color = "red";
+                alert("Incorrect PIN. Please try again.");
             }
         }
     </script>
 </head>
 <body>
-    <img src="Main Prov Logo.png" alt="Mellor Heritage & Provenance Verification">
-    <h2>Verify Your Certificate</h2>
-    <p>Enter your 10-digit certificate number below:</p>
-    <input type="text" id="certificateCode" placeholder="Enter Code">
-    <button onclick="verifyCertificate()">Verify</button>
-    <p id="result"></p>
-    <div id="qrcode"></div>
-    <script>generateQRCode();</script>
+    <div class="container">
+        <h2>Welcome to</h2>
+        <h1>The William C. Mellor Archive</h1>
+        <p>Please enter your PIN to access the archive</p>
+        <input type="password" id="pin" placeholder="Enter PIN">
+        <br>
+        <button onclick="checkPIN()">Submit</button>
+    </div>
 </body>
 </html>
