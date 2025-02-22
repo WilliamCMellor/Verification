@@ -18,9 +18,18 @@
             justify-content: center;
         }
 
+        .content-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
         .pin-container {
             text-align: center;
             padding: 20px;
+            margin-top: 20px; /* Added spacing between text and input */
         }
 
         .pin-input {
@@ -55,18 +64,30 @@
         .menu-link:hover {
             color: #666;
         }
+
+        /* Added style for the instruction text */
+        .instruction-text {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="pin-container">
-        <input type="password" id="pinInput" class="pin-input" placeholder="Enter PIN">
-        <div id="errorMessage" class="error-message">Invalid PIN</div>
-    </div>
+    <div class="content-container">
+        <div class="instruction-text">
+            Please enter your pin to access the archive
+        </div>
+        <div class="pin-container">
+            <input type="password" id="pinInput" class="pin-input" placeholder="Enter PIN">
+            <div id="errorMessage" class="error-message">Invalid PIN</div>
+        </div>
 
-    <div id="menuContainer" class="menu-container">
-        <a href="provenance.html" class="menu-link">Provenance</a>
-        <a href="collection-notes.html" class="menu-link">Collection Notes</a>
-        <a href="ownership-records.html" class="menu-link">Ownership Records</a>
+        <div id="menuContainer" class="menu-container">
+            <a href="provenance.html" class="menu-link">Provenance</a>
+            <a href="collection-notes.html" class="menu-link">Collection Notes</a>
+            <a href="ownership-records.html" class="menu-link">Ownership Records</a>
+        </div>
     </div>
 
     <script>
@@ -85,6 +106,7 @@
             const menuContainer = document.getElementById('menuContainer');
 
             if (pinInput.value === currentPin) {
+                document.querySelector('.instruction-text').style.display = 'none';
                 pinInput.style.display = 'none';
                 errorMessage.style.display = 'none';
                 menuContainer.style.display = 'block';
@@ -96,6 +118,7 @@
 
         // Check if already authenticated
         if (localStorage.getItem('isAuthenticated') === 'true') {
+            document.querySelector('.instruction-text').style.display = 'none';
             document.querySelector('.pin-container').style.display = 'none';
             document.getElementById('menuContainer').style.display = 'block';
         }
