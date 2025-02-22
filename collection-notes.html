@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection Notes - William C. Mellor Archive</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: url('home2.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .notes-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .note-entry {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .home-link {
+            display: block;
+            margin-top: 20px;
+            color: #333;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="notes-container">
+        <h1>Collection Notes</h1>
+        
+        <div id="notesList"></div>
+        
+        <button onclick="addNote()" class="button">Add New Note</button>
+        <a href="index.html" class="home-link">Return to Home</a>
+    </div>
+
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('isAuthenticated')) {
+            window.location.href = 'index.html';
+        }
+
+        function addNote() {
+            const note = prompt("Enter collection note:");
+            if (note) {
+                const notes = JSON.parse(localStorage.getItem('collectionNotes') || '[]');
+                notes.push({
+                    date: new Date().toISOString(),
+                    content: note
+                });
+                localStorage.setItem('collectionNotes', JSON.stringify(notes));
+                displayNotes();
+            }
+        }
+
+        function displayNotes() {
+            const notes = JSON.parse(localStorage.getItem('collectionNotes') || '[]');
+            const notesList = document.getElementById('notesList');
+            notesList.innerHTML = notes.map(note => `
+                <div class="note-entry">
+                    <strong>${new Date(note.date).toLocaleDateString()}</strong>: ${note.content}
+                </div>
+            `).join('');
+        }
+
+        displayNotes();
+    </script>
+</body>
+</html>
