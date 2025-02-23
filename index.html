@@ -84,13 +84,16 @@
     <script>
         function transitionPage(url) {
             document.body.classList.add('fade-out');
-            setTimeout(() => { window.location.href = url; }, 500);
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
         }
 
         const INITIAL_PIN = 'WCM062903';
         let currentPin = INITIAL_PIN;
 
         window.onload = function() {
+            document.body.classList.remove('fade-out');
             if (!localStorage.getItem('isAuthenticated')) {
                 localStorage.removeItem('isAuthenticated');
                 checkAuth();
