@@ -22,8 +22,13 @@
             to { opacity: 1; }
         }
 
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
         .fade-out {
-            opacity: 0;
+            animation: fadeOut 0.5s forwards;
         }
 
         .pin-container {
@@ -66,11 +71,12 @@
             font-family: Papyrus, fantasy;
             font-weight: bold;
             text-transform: uppercase;
-            transition: text-shadow 0.3s ease-in-out;
+            transition: text-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
         }
 
         .menu-link:hover {
-            text-shadow: 0px 0px 10px white;
+            color: white;
+            text-shadow: 0px 0px 20px white;
         }
     </style>
 </head>
@@ -85,8 +91,10 @@
         let currentPin = INITIAL_PIN;
 
         window.onload = function() {
-            sessionStorage.removeItem('isAuthenticated');
-            checkAuth();
+            if (!localStorage.getItem('isAuthenticated')) {
+                localStorage.removeItem('isAuthenticated');
+                checkAuth();
+            }
         };
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -103,19 +111,23 @@
             const menuContainer = document.getElementById('menuContainer');
 
             if (pinInput.value === currentPin) {
-                document.querySelector('.pin-container').style.display = 'none';
-                errorMessage.style.display = 'none';
-                menuContainer.style.display = 'block';
-                sessionStorage.setItem('isAuthenticated', 'true');
-                document.body.style.background = "url('home2.jpg') no-repeat center center fixed";
-                document.body.style.backgroundSize = 'cover';
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    document.querySelector('.pin-container').style.display = 'none';
+                    errorMessage.style.display = 'none';
+                    menuContainer.style.display = 'block';
+                    localStorage.setItem('isAuthenticated', 'true');
+                    document.body.style.background = "url('home2.jpg') no-repeat center center fixed";
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.classList.remove('fade-out');
+                }, 500);
             } else {
                 errorMessage.style.display = 'block';
             }
         }
 
         function checkAuth() {
-            if (sessionStorage.getItem('isAuthenticated') === 'true') {
+            if (localStorage.getItem('isAuthenticated') === 'true') {
                 document.querySelector('.pin-container').style.display = 'none';
                 document.getElementById('menuContainer').style.display = 'block';
                 document.body.style.background = "url('home2.jpg') no-repeat center center fixed";
@@ -133,9 +145,9 @@
     </div>
 
     <div id="menuContainer" class="menu-container">
-        <a href="provenance.html" class="menu-link">PROVENANCE</a>
-        <a href="collection-notes.html" class="menu-link">COLLECTION NOTES</a>
-        <a href="ownership-records.html" class="menu-link">OWNERSHIP RECORDS</a>
+        <a href="provenance.html" class="menu-link" onclick="transitionPage('provenance.html'); return false;">PROVENANCE</a>
+        <a href="collection-notes.html" class="menu-link" onclick="transitionPage('collection-notes.html'); return false;">COLLECTION NOTES</a>
+        <a href="ownership-records.html" class="menu-link" onclick="transitionPage('ownership-records.html'); return false;">OWNERSHIP RECORDS</a>
     </div>
 </body>
 </html>
