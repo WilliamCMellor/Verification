@@ -28,7 +28,8 @@
         }
 
         .fade-out {
-            animation: fadeOut 0.5s forwards;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
 
         .pin-container {
@@ -93,9 +94,8 @@
         let currentPin = INITIAL_PIN;
 
         window.onload = function() {
-            document.body.classList.remove('fade-out');
+            document.body.style.opacity = '1';
             if (!localStorage.getItem('isAuthenticated')) {
-                localStorage.removeItem('isAuthenticated');
                 checkAuth();
             }
         };
