@@ -16,7 +16,7 @@
 
         .pin-container {
             position: absolute;
-            bottom: 15%; /* Moved much lower on the page */
+            bottom: 15%;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
@@ -38,10 +38,9 @@
 
         .menu-container {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
+            top: 40%;
+            left: 10%; /* Moved to left side */
+            text-align: left;
             display: none;
         }
 
@@ -51,7 +50,10 @@
             margin: 10px;
             color: #333;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 24px; /* Increased size */
+            font-family: Papyrus, fantasy;
+            font-weight: bold;
+            text-transform: uppercase;
             transition: color 0.3s;
         }
 
@@ -67,14 +69,20 @@
     </div>
 
     <div id="menuContainer" class="menu-container">
-        <a href="provenance.html" class="menu-link">Provenance</a>
-        <a href="collection-notes.html" class="menu-link">Collection Notes</a>
-        <a href="ownership-records.html" class="menu-link">Ownership Records</a>
+        <a href="provenance.html" class="menu-link">PROVENANCE</a>
+        <a href="collection-notes.html" class="menu-link">COLLECTION NOTES</a>
+        <a href="ownership-records.html" class="menu-link">OWNERSHIP RECORDS</a>
     </div>
 
     <script>
         const INITIAL_PIN = 'WCM062903';
         let currentPin = INITIAL_PIN;
+
+        // Clear authentication on page load
+        window.onload = function() {
+            localStorage.removeItem('isAuthenticated');
+            checkAuth();
+        };
 
         document.getElementById('pinInput').addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
@@ -91,16 +99,20 @@
                 document.querySelector('.pin-container').style.display = 'none';
                 errorMessage.style.display = 'none';
                 menuContainer.style.display = 'block';
-                localStorage.setItem('isAuthenticated', 'true');
+                sessionStorage.setItem('isAuthenticated', 'true');
             } else {
                 errorMessage.style.display = 'block';
             }
         }
 
-        // Check if already authenticated
-        if (localStorage.getItem('isAuthenticated') === 'true') {
-            document.querySelector('.pin-container').style.display = 'none';
-            document.getElementById('menuContainer').style.display = 'block';
+        function checkAuth() {
+            if (sessionStorage.getItem('isAuthenticated') === 'true') {
+                document.querySelector('.pin-container').style.display = 'none';
+                document.getElementById('menuContainer').style.display = 'block';
+            } else {
+                document.querySelector('.pin-container').style.display = 'block';
+                document.getElementById('menuContainer').style.display = 'none';
+            }
         }
     </script>
 </body>
