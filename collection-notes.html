@@ -8,10 +8,21 @@
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
-            background: url('home2.jpg') no-repeat center center fixed;
-            background-size: cover;
+            margin: 0;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            transition: opacity 0.5s ease-in-out;
         }
-
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-out {
+            opacity: 0;
+        }
+        
         .notes-container {
             max-width: 800px;
             margin: 0 auto;
@@ -19,13 +30,13 @@
             padding: 20px;
             border-radius: 8px;
         }
-
+        
         .note-entry {
             margin-bottom: 20px;
             padding: 10px;
             border-bottom: 1px solid #ddd;
         }
-
+        
         .button {
             padding: 10px 20px;
             background-color: #333;
@@ -34,31 +45,45 @@
             border-radius: 4px;
             cursor: pointer;
         }
-
+        
         .home-link {
             display: block;
             margin-top: 20px;
             color: #333;
             text-decoration: none;
+            transition: text-shadow 0.3s ease-in-out;
+        }
+        
+        .home-link:hover {
+            text-shadow: 0px 0px 10px white;
         }
     </style>
 </head>
 <body>
+    <script>
+        document.body.style.background = `url(${localStorage.getItem('isAuthenticated') ? 'home2.jpg' : 'PinScreen1.jpg'}) no-repeat center center fixed`;
+        document.body.style.backgroundSize = 'cover';
+        
+        function transitionPage(url) {
+            document.body.classList.add('fade-out');
+            setTimeout(() => { window.location.href = url; }, 500);
+        }
+        
+        if (!localStorage.getItem('isAuthenticated')) {
+            transitionPage('index.html');
+        }
+    </script>
+    
     <div class="notes-container">
         <h1>Collection Notes</h1>
         
         <div id="notesList"></div>
         
         <button onclick="addNote()" class="button">Add New Note</button>
-        <a href="index.html" class="home-link">Return to Home</a>
+        <a href="index.html" class="home-link" onclick="event.preventDefault(); transitionPage('index.html');">Return to Home</a>
     </div>
-
+    
     <script>
-        // Check authentication
-        if (!localStorage.getItem('isAuthenticated')) {
-            window.location.href = 'index.html';
-        }
-
         function addNote() {
             const note = prompt("Enter collection note:");
             if (note) {
@@ -71,7 +96,7 @@
                 displayNotes();
             }
         }
-
+        
         function displayNotes() {
             const notes = JSON.parse(localStorage.getItem('collectionNotes') || '[]');
             const notesList = document.getElementById('notesList');
@@ -81,7 +106,7 @@
                 </div>
             `).join('');
         }
-
+        
         displayNotes();
     </script>
 </body>
