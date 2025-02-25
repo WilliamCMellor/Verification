@@ -8,7 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
-            background: url('home2.jpg') no-repeat center center fixed;
+            background: url('back.jpg') no-repeat center center fixed;
             background-size: cover;
             opacity: 0;
             animation: fadeIn 1s forwards;
@@ -56,12 +56,6 @@
             margin-top: 20px;
             color: #333;
             text-decoration: none;
-        }
-
-        /* Fade-out effect */
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
         }
     </style>
 </head>
@@ -130,7 +124,7 @@
             document.body.style.animation = 'fadeOut 1s forwards';
             setTimeout(() => {
                 window.location.href = url;
-            }, 1000); // Adjust to match the animation duration
+            }, 1000);
         }
 
         displayRecords();
