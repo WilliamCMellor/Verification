@@ -13,23 +13,15 @@
             background-size: cover;
             font-family: Arial, sans-serif;
             opacity: 0;
-            animation: fadeIn 1s forwards;
             transition: opacity 0.5s ease-in-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-
-        .fade-out {
+        body.fade-out {
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+        }
+
+        body.fade-in {
+            opacity: 1;
         }
 
         .pin-container {
@@ -81,7 +73,7 @@
         }
     </style>
 </head>
-<body>
+<body class="fade-in">
     <script>
         function transitionPage(url) {
             document.body.classList.add('fade-out');
@@ -94,10 +86,7 @@
         let currentPin = INITIAL_PIN;
 
         window.onload = function() {
-            document.body.style.opacity = '1';
-            if (!localStorage.getItem('isAuthenticated')) {
-                checkAuth();
-            }
+            checkAuth();
         };
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -114,43 +103,4 @@
             const menuContainer = document.getElementById('menuContainer');
 
             if (pinInput.value === currentPin) {
-                document.body.classList.add('fade-out');
-                setTimeout(() => {
-                    document.querySelector('.pin-container').style.display = 'none';
-                    errorMessage.style.display = 'none';
-                    menuContainer.style.display = 'block';
-                    localStorage.setItem('isAuthenticated', 'true');
-                    document.body.style.background = "url('home2.jpg') no-repeat center center fixed";
-                    document.body.style.backgroundSize = 'contain'; /* Adjusted to prevent zoom */
-                    document.body.classList.remove('fade-out');
-                }, 500);
-            } else {
-                errorMessage.style.display = 'block';
-            }
-        }
-
-        function checkAuth() {
-            if (localStorage.getItem('isAuthenticated') === 'true') {
-                document.querySelector('.pin-container').style.display = 'none';
-                document.getElementById('menuContainer').style.display = 'block';
-                document.body.style.background = "url('home2.jpg') no-repeat center center fixed";
-                document.body.style.backgroundSize = 'contain'; /* Adjusted to prevent zoom */
-            } else {
-                document.querySelector('.pin-container').style.display = 'block';
-                document.getElementById('menuContainer').style.display = 'none';
-            }
-        }
-    </script>
-
-    <div class="pin-container">
-        <input type="password" id="pinInput" class="pin-input" placeholder="Enter PIN">
-        <div id="errorMessage" class="error-message">Invalid PIN</div>
-    </div>
-
-    <div id="menuContainer" class="menu-container">
-        <a href="provenance.html" class="menu-link" onclick="transitionPage('provenance.html'); return false;">PROVENANCE REPORT</a>
-        <a href="collection-notes.html" class="menu-link" onclick="transitionPage('collection-notes.html'); return false;">COLLECTION NOTES</a>
-        <a href="ownership-records.html" class="menu-link" onclick="transitionPage('ownership-records.html'); return false;">OWNERSHIP RECORDS</a>
-    </div>
-</body>
-</html>
+                document.body.classList
