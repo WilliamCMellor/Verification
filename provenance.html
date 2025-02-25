@@ -10,6 +10,13 @@
             padding: 20px;
             background: url('home2.jpg') no-repeat center center fixed;
             background-size: cover;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .provenance-container {
@@ -49,7 +56,8 @@
         <h1>Provenance Documentation</h1>
         <p>Access the Master Copy of The William C. Mellor Archive Provenance Report below.</p>
         
-        <a href="Unofficial Provenance and Heritage Report.pdf" class="button" target="_blank">
+        <!-- Ensure the file name and path is correct -->
+        <a href="Mellor Archive Provenance Report - Master.pdf" class="button" target="_blank">
             View Provenance Report
         </a>
 
