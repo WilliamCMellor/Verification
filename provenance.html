@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Provenance - Provenance Report - Master Copy</title>
+    <title>Provenance - William C. Mellor Archive</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
-            background: url('home2.jpg') no-repeat center center fixed;
+            background: url('back.jpg') no-repeat center center fixed;
             background-size: cover;
             opacity: 0;
             animation: fadeIn 1s forwards;
@@ -19,28 +19,16 @@
             to { opacity: 1; }
         }
 
-        .provenance-container {
+        .container {
             max-width: 800px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.9);
             padding: 20px;
             border-radius: 8px;
+        }
+
+        h1 {
             text-align: center;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #333;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            margin: 20px 0;
-            font-size: 16px;
-        }
-
-        .button:hover {
-            background-color: #555;
         }
 
         .home-link {
@@ -52,22 +40,18 @@
     </style>
 </head>
 <body>
-    <div class="provenance-container">
-        <h1>Provenance Documentation</h1>
-        <p>Access the Master Copy of The William C. Mellor Archive Provenance Report below.</p>
-        
-        <!-- Ensure the file name and path is correct -->
-        <a href="Mellor Archive Provenance Report - Master.pdf" class="button" target="_blank">
-            View Provenance Report
-        </a>
-
-        <a href="index.html" class="home-link">Return to Home</a>
+    <div class="container">
+        <h1>Provenance of the William C. Mellor Collection</h1>
+        <p>Details of the collection's history, its significance, and the provenance of each item.</p>
+        <a href="index.html" class="home-link" onclick="fadeOutAndNavigate('index.html'); return false;">Return to Home</a>
     </div>
 
     <script>
-        // Check authentication
-        if (!localStorage.getItem('isAuthenticated')) {
-            window.location.href = 'index.html';
+        function fadeOutAndNavigate(url) {
+            document.body.style.animation = 'fadeOut 1s forwards';
+            setTimeout(() => {
+                window.location.href = url;
+            }, 1000);
         }
     </script>
 </body>
