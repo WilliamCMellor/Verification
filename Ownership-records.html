@@ -10,6 +10,13 @@
             padding: 20px;
             background: url('home2.jpg') no-repeat center center fixed;
             background-size: cover;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .records-container {
@@ -50,6 +57,12 @@
             color: #333;
             text-decoration: none;
         }
+
+        /* Fade-out effect */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -67,7 +80,7 @@
             <button onclick="setNewPin()" class="button">Set PIN</button>
         </div>
 
-        <a href="index.html" class="home-link">Return to Home</a>
+        <a href="index.html" class="home-link" onclick="fadeOutAndNavigate('index.html'); return false;">Return to Home</a>
     </div>
 
     <script>
@@ -111,6 +124,13 @@
                 localStorage.removeItem('isAuthenticated');
                 window.location.href = 'index.html';
             }
+        }
+
+        function fadeOutAndNavigate(url) {
+            document.body.style.animation = 'fadeOut 1s forwards';
+            setTimeout(() => {
+                window.location.href = url;
+            }, 1000); // Adjust to match the animation duration
         }
 
         displayRecords();
