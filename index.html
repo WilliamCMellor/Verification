@@ -121,7 +121,7 @@
                     menuContainer.style.display = 'block';
                     localStorage.setItem('isAuthenticated', 'true');
                     document.body.style.background = "url('home2.jpg') no-repeat center center fixed";
-                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundSize = 'contain'; /* Adjusted to prevent zoom */
                     document.body.classList.remove('fade-out');
                 }, 500);
             } else {
@@ -134,7 +134,7 @@
                 document.querySelector('.pin-container').style.display = 'none';
                 document.getElementById('menuContainer').style.display = 'block';
                 document.body.style.background = "url('home2.jpg') no-repeat center center fixed";
-                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundSize = 'contain'; /* Adjusted to prevent zoom */
             } else {
                 document.querySelector('.pin-container').style.display = 'block';
                 document.getElementById('menuContainer').style.display = 'none';
@@ -148,7 +148,7 @@
     </div>
 
     <div id="menuContainer" class="menu-container">
-        <a href="provenance.html" class="menu-link" onclick="transitionPage('provenance.html'); return false;">PROVENANCE REPORTR</a>
+        <a href="provenance.html" class="menu-link" onclick="transitionPage('provenance.html'); return false;">PROVENANCE REPORT</a>
         <a href="collection-notes.html" class="menu-link" onclick="transitionPage('collection-notes.html'); return false;">COLLECTION NOTES</a>
         <a href="ownership-records.html" class="menu-link" onclick="transitionPage('ownership-records.html'); return false;">OWNERSHIP RECORDS</a>
     </div>
