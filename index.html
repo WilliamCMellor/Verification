@@ -8,13 +8,20 @@
     <style>
         body {
             background-image: url('PinScreen1.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
         }
         .pin-container {
             position: absolute;
-            bottom: 15%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
         }
         .pin-input {
             width: 200px;
@@ -22,6 +29,20 @@
             margin: 10px;
             border: 2px solid #333;
             border-radius: 4px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .pin-button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #333;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .pin-button:hover {
+            background-color: #555;
         }
         .error-message {
             color: red;
@@ -54,9 +75,10 @@
     </style>
 </head>
 <body>
-    <div class="pin-container">
+    <div class="pin-container" id="pinContainer">
+        <h2>Enter PIN to Access</h2>
         <input type="password" id="pinInput" class="pin-input" placeholder="Enter PIN">
-        <button onclick="validatePin()">Submit</button>
+        <button class="pin-button" onclick="validatePin()">Submit</button>
         <div id="errorMessage" class="error-message">Invalid PIN</div>
     </div>
     <div class="menu-container" id="menuContainer">
@@ -70,8 +92,8 @@
 
         function checkAuth() {
             if (localStorage.getItem('isAuthenticated')) {
-                document.querySelector('.pin-container').style.display = 'none';
-                document.querySelector('.menu-container').style.display = 'block';
+                document.getElementById('pinContainer').style.display = 'none';
+                document.getElementById('menuContainer').style.display = 'block';
             }
         }
 
@@ -79,10 +101,11 @@
             const pinInput = document.getElementById('pinInput');
             const errorMessage = document.getElementById('errorMessage');
             const menuContainer = document.getElementById('menuContainer');
+            const pinContainer = document.getElementById('pinContainer');
 
             if (pinInput.value === currentPin) {
                 localStorage.setItem('isAuthenticated', 'true');
-                document.querySelector('.pin-container').style.display = 'none';
+                pinContainer.style.display = 'none';
                 menuContainer.style.display = 'block';
                 errorMessage.style.display = 'none';
             } else {
