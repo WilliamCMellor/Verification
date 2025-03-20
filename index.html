@@ -4,26 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William C. Mellor Archive</title>
+    <link rel="stylesheet" href="style.css">
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            background: url('PinScreen1.jpg') no-repeat center center fixed;
-            background-size: cover;
-            font-family: Arial, sans-serif;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            background-image: url('PinScreen1.jpg');
         }
-
-        body.fade-out {
-            opacity: 0;
-        }
-
-        body.fade-in {
-            opacity: 1;
-        }
-
         .pin-container {
             position: absolute;
             bottom: 15%;
@@ -31,7 +16,6 @@
             transform: translateX(-50%);
             text-align: center;
         }
-
         .pin-input {
             width: 200px;
             padding: 10px;
@@ -39,13 +23,11 @@
             border: 2px solid #333;
             border-radius: 4px;
         }
-
         .error-message {
             color: red;
             display: none;
             margin-top: 10px;
         }
-
         .menu-container {
             position: absolute;
             top: 40%;
@@ -53,7 +35,6 @@
             text-align: left;
             display: none;
         }
-
         .menu-link {
             display: block;
             padding: 15px;
@@ -66,28 +47,66 @@
             text-transform: uppercase;
             transition: text-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
         }
-
         .menu-link:hover {
             color: white;
             text-shadow: 0px 0px 20px white;
         }
     </style>
 </head>
-<body class="fade-in">
+<body>
+    <div class="pin-container">
+        <input type="password" id="pinInput" class="pin-input" placeholder="Enter PIN">
+        <div id="errorMessage" class="error-message">Invalid PIN</div>
+    </div>
+    <div class="menu-container" id="menuContainer">
+        <a href="collection_notes.html" class="menu-link" onclick="transitionPage('collection_notes.html'); return false;">Collection Notes</a>
+        <a href="ownership_records.html" class="menu-link" onclick="transitionPage('ownership_records.html'); return false;">Ownership Records</a>
+        <a href="provenance.html" class="menu-link" onclick="transitionPage('provenance.html'); return false;">Provenance</a>
+    </div>
     <script>
+        // Fade in when the page loads
+        window.onload = function() {
+            document.body.classList.add('fade-in');
+            checkAuth();
+        };
+
+        // Fade out and navigate to a new page
         function transitionPage(url) {
             document.body.classList.add('fade-out');
-            setTimeout(() => {
+            function handler() {
+                document.body.removeEventListener('transitionend', handler);
                 window.location.href = url;
-            }, 500);
+            }
+            document.body.addEventListener('transitionend', handler);
+            setTimeout(handler, 600); // Fallback after 600ms
         }
 
         const INITIAL_PIN = 'WCM062903';
-        let currentPin = INITIAL_PIN;
+        let currentPin = localStorage.getItem('currentPin') || INITIAL_PIN;
 
-        window.onload = function() {
-            checkAuth();
-        };
+        function checkAuth() {
+            if (localStorage.getItem('isAuthenticated')) {
+                document.querySelector('.pin-container').style.display = 'none';
+                document.querySelector('.menu-container').style.display = 'block';
+            } else {
+                document.querySelector('.pin-container').style.display = 'block';
+                document.querySelector('.menu-container').style.display = 'none';
+            }
+        }
+
+        function validatePin() {
+            const pinInput = document.getElementById('pinInput');
+            const errorMessage = document.getElementById('errorMessage');
+            const menuContainer = document.getElementById('menuContainer');
+
+            if (pinInput.value === currentPin) {
+                localStorage.setItem('isAuthenticated', 'true');
+                document.querySelector('.pin-container').style.display = 'none';
+                menuContainer.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('pinInput').addEventListener('keypress', function(event) {
@@ -96,11 +115,6 @@
                 }
             });
         });
-
-        function validatePin() {
-            const pinInput = document.getElementById('pinInput');
-            const errorMessage = document.getElementById('errorMessage');
-            const menuContainer = document.getElementById('menuContainer');
-
-            if (pinInput.value === currentPin) {
-                document.body.classList
+    </script>
+</body>
+</html>
